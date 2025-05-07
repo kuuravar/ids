@@ -1,0 +1,935 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Data Science Mini-Project &#8212; Finnish Municipality Migration Analysis</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'intro';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Municipality data from Statistics Finland (Tilastokeskus, TK)" href="notebooks/tk-data-fetch.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="#">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Finnish Municipality Migration Analysis</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1 current active">
+                <a class="reference internal" href="#">
+                    Data Science Mini-Project
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Data collection and preprocessing</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="notebooks/tk-data-fetch.html">Municipality data from Statistics Finland (Tilastokeskus, TK)</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="notebooks/sotkanet-municipality.html">Sotkanet indicators</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Exploratory data analysis (EDA) and visualizations</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="notebooks/tk-data-basic-eda.html">Analysis of basic municipality statistics and migration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Community detection</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="notebooks/tk-migri-community.html">Analyze for migration communities by years</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Modeling</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="notebooks/ts-data-preparation.html">Data preparation for time series models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/tk-darts-tft-global.html">Time series modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/tk-lightgbm-common_data.html">LightGBM model on migration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Environment</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="environment.html">The main environment used for the modeling</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/intro.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Data Science Mini-Project</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-collection-and-preprocessing">Data Collection and Preprocessing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exploratory-data-analysis">Exploratory Data Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#missing-values-and-preprocessing">Missing values and preprocessing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sotkanet-data-correlations">Sotkanet data correlations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#correlations-of-migration-and-municipality-statistics">Correlations of migration and municipality statistics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distibution-of-selected-municipality-features-and-migration">Distibution of selected municipality features and migration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#do-females-migrate-more-often-and-further">Do females migrate more often and further?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-migration-flows">Visualizing migration flows</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#community-detection">Community Detection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modeling">Modeling</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tft-model">TFT model</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tft-results">TFT results</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lightgbm-model">LightGBM model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusions">Conclusions</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="data-science-mini-project">
+<h1>Data Science Mini-Project<a class="headerlink" href="#data-science-mini-project" title="Link to this heading">#</a></h1>
+<p>version 2025-05-07</p>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<p>This is a Data Science Mini-Project aimed at analyzing municipal migration in Finland during the years 1990-2023.</p>
+<p>The aim is to study the migration patterns between municipalities, how they have evolved over the years, and possibly reveal the factors underlying migration decisions and/or predict future migrations.</p>
+<p>The target group includes municipality and government officials, urbanization planners, or people interested in moving to another municipality.</p>
+<p>The project could yield better understanding of medium-to-large-scale social behavior in Finland and help elucidate intervention targets for increasing municipality attractiveness.</p>
+<p>The initial hypotheses include:</p>
+<ul class="simple">
+<li><p>People tend to move to and from the bigger cities (urbanization).</p></li>
+<li><p>Females move more frequently and further (education).</p></li>
+<li><p>When normalized by municipality population, some smaller municipalities experience larger net migration than the largest municipalities.</p></li>
+</ul>
+<p>Questions to answer:</p>
+<ul class="simple">
+<li><p>Which municipality characteristics are correlated with in- and out-migration?</p></li>
+<li><p>Are there communities formed between municipalities?</p></li>
+<li><p>Can we model the migration as time series? Can we explain what affects the predictions?</p></li>
+</ul>
+<p>The project is documented from start to finish on this current page.
+The full details of the analyses and modelling can be found from the notebooks in the menu, but beware that the notebooks are not polished.</p>
+<p>At the final stages of the project we realized that normalized net migration would have been more interesting than absolute arrival and departure numbers.
+Accordingly, the TFT and LightGBM models are fit on the normalized net migration.</p>
+<p>Another important thing to mention, is that the analyses and the models do not include data on migration from or to the other countries.
+Also, there is no data included for people born or diseased.
+Together, these could have an important effect on normalizing migration flows, but since we restrict the analyses to municipalities with at least 10000 inhabitants the error should hopefully be tolerable.</p>
+<p>We start with  Data Collection and Preprocessing, Exploratory Data Analysis, move to Community Detection, and then Modeling.
+Conclusions wraps up the document.</p>
+<p>The project is done in the Python ecosystem.</p>
+<p>Note that the figures can be enlarged by clicking.</p>
+</section>
+<section id="data-collection-and-preprocessing">
+<h2>Data Collection and Preprocessing<a class="headerlink" href="#data-collection-and-preprocessing" title="Link to this heading">#</a></h2>
+<p>The used data is open and was collected from Statistics Finland (Tilastokeskus, TK) and Sotkanet.
+TK provides the yearly migration data and key municipality statistics, as well as the dwelling price data.
+Sotkanet combines data from multiple sources, including Finnish Institute for Health and Welfare (THL).
+Statistics Finland has a custom PxWeb API, and Sotkanet a REST API.</p>
+<p>Geographic data is accessed through <code class="docutils literal notranslate"><span class="pre">geopy</span></code> Python package.</p>
+<p>Raw data is stored as CSV files which is enough for the scope of the project.</p>
+</section>
+<section id="exploratory-data-analysis">
+<h2>Exploratory Data Analysis<a class="headerlink" href="#exploratory-data-analysis" title="Link to this heading">#</a></h2>
+<section id="missing-values-and-preprocessing">
+<h3>Missing values and preprocessing<a class="headerlink" href="#missing-values-and-preprocessing" title="Link to this heading">#</a></h3>
+<p>We begin with loading the migration and municipality data.
+Then we print a few rows and check for missing values, and datatypes of the dataframe columns.</p>
+<p>For municipality statistics, we have 43 features, 10 of which have missing values for 2024.
+The year 2024 is discarded.</p>
+<p>There are 89 municipalities with population exceeding 10000 each year.
+We limit further analyses and modeling on these.</p>
+<p>Migration data has no missing values, and reports migration stratified by <code class="docutils literal notranslate"><span class="pre">male</span></code> and <code class="docutils literal notranslate"><span class="pre">female</span></code>.
+The migration is comprised of <code class="docutils literal notranslate"><span class="pre">Arrival</span></code> and <code class="docutils literal notranslate"><span class="pre">Departure</span></code> counts between the municipalities per year.</p>
+<p>Migration and municipality statistic data was merged without problems.
+Some of the distributions were plotted in the analyses below, and municipalities grouped by the feature values in the PCA analysis as shown later.</p>
+<p>For Sotkanet data, it turned out that there were many missing values such that, for all the indicators, some municipalites had no values at all.
+We therefore decided to drop the Sotkanet data altogether, apart from the correlation analysis.
+It might be possible to get aggregated data based on the larger areas that the municipalities belong to, but is out of scope of the project.</p>
+</section>
+<section id="sotkanet-data-correlations">
+<h3>Sotkanet data correlations<a class="headerlink" href="#sotkanet-data-correlations" title="Link to this heading">#</a></h3>
+<p>Ten indicators from Sotkanet database were selected somewhat arbitrarily, based on the general knowledge preconception of possibly having an effect on migrations. The indicators were</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>ID</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>180</p></td>
+<td><p>Measure of educational level</p></td>
+</tr>
+<tr class="row-odd"><td><p>181</p></td>
+<td><p>Unemployed people, as % of labour force</p></td>
+</tr>
+<tr class="row-even"><td><p>289</p></td>
+<td><p>Heavy drinking at least once a month, as % of all pupils in 8th and 9th year of comprehensive school</p></td>
+</tr>
+<tr class="row-odd"><td><p>306</p></td>
+<td><p>Disability pension recipients aged 25-64, as % of total population of the same age</p></td>
+</tr>
+<tr class="row-even"><td><p>493</p></td>
+<td><p>Social assistance, recipient persons during year, as % of total population</p></td>
+</tr>
+<tr class="row-odd"><td><p>3105</p></td>
+<td><p>Alcohol mortality per 100 000 inhabitant</p></td>
+</tr>
+<tr class="row-even"><td><p>3169</p></td>
+<td><p>Parturients who smoked during pregnancy, % of parturients</p></td>
+</tr>
+<tr class="row-odd"><td><p>3113</p></td>
+<td><p>Offences against life and health recorded by the police per 1000 inhabitants</p></td>
+</tr>
+<tr class="row-even"><td><p>3071</p></td>
+<td><p>Persons who are difficult to employ (structural unemployment), as % of persons aged 15 - 64</p></td>
+</tr>
+<tr class="row-odd"><td><p>3076</p></td>
+<td><p>Voting turnout in municipal elections, %</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The correlations of Sotkanet features is shown in <a class="reference internal" href="#sotka-corr-fig"><span class="std std-numref">Fig. 1</span></a>.
+Some of the correlations are quite strong, but in general the absolute value is below 0.9.
+Well known sosioeconomic phenomena can be observed, such as the protective effect of education against the heavy alcohol use.</p>
+<figure class="align-default" id="sotka-corr-fig">
+<a class="reference internal image-reference" href="_images/sotka_corr.png"><img alt="_images/sotka_corr.png" src="_images/sotka_corr.png" style="width: 600px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">The (linear) correlations of the selected Sotkanet indicators for the Finnish municipalities.</span><a class="headerlink" href="#sotka-corr-fig" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="correlations-of-migration-and-municipality-statistics">
+<h3>Correlations of migration and municipality statistics<a class="headerlink" href="#correlations-of-migration-and-municipality-statistics" title="Link to this heading">#</a></h3>
+<p>Correlations (linear) were analysed between migration and municipality statistics.
+We performed correlation analysis separately for males, females, on arrival and departure  municipalities.
+We also checked the correlation of differences between arrival and departure municipality statistics and the migration.
+The results were similar for all cases, and we present only correlations for males and arrival municipality statistics.</p>
+<!--- To keep the report concise, the raw distributions of the municipality statistics are not shown, but are addressed later in the PCA analysis. -->
+<p>In the figure <a class="reference internal" href="#males-mun-stats-corr-fig"><span class="std std-numref">Fig. 2</span></a> we see that the features naturally correlate.
+Especially the features based on counting are correlated positively, like <code class="docutils literal notranslate"><span class="pre">Finnish</span> <span class="pre">speakers</span></code> and <code class="docutils literal notranslate"><span class="pre">Persons</span> <span class="pre">born</span> <span class="pre">abroad</span></code>.
+This is something to keep in mind going further.
+For the share-based features, the correlation is more intuitive with, e.g., <code class="docutils literal notranslate"><span class="pre">Share</span> <span class="pre">of</span> <span class="pre">Finnish</span> <span class="pre">speakers,</span> <span class="pre">%</span></code> and <code class="docutils literal notranslate"><span class="pre">Share</span> <span class="pre">of</span> <span class="pre">Swedish</span> <span class="pre">speakers,</span> <span class="pre">%</span></code> having a strong negative correlation.</p>
+<p>Relevant to migration, we see, e.g., that the <code class="docutils literal notranslate"><span class="pre">Share</span> <span class="pre">of</span> <span class="pre">persons</span> <span class="pre">in</span> <span class="pre">urban</span> <span class="pre">area,</span> <span class="pre">%</span></code> is negatively correlated with <code class="docutils literal notranslate"><span class="pre">Share</span> <span class="pre">of</span> <span class="pre">persons</span> <span class="pre">born</span> <span class="pre">in</span> <span class="pre">area</span> <span class="pre">of</span> <span class="pre">residence,</span> <span class="pre">%</span></code> suggesting increasing migration to urban areas.</p>
+<figure class="align-default" id="males-mun-stats-corr-fig">
+<a class="reference internal image-reference" href="_images/male_migri_stats_corr.png"><img alt="_images/male_migri_stats_corr.png" src="_images/male_migri_stats_corr.png" style="height: 500px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 2 </span><span class="caption-text">Correlation of male migration and municipality statistics.</span><a class="headerlink" href="#males-mun-stats-corr-fig" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Inspecting  correlations of <code class="docutils literal notranslate"><span class="pre">Migration</span></code> shown in <a class="reference internal" href="#males-mun-stats-migration-corr-fig"><span class="std std-numref">Fig. 3</span></a> reveals, e.g., that</p>
+<ul class="simple">
+<li><p>Persons of working age correate with the migration more than other age groups.</p></li>
+<li><p>Demographic and economic dependency ratios are negatively correlated with the migration.</p></li>
+<li><p>Share of people with foreign background is positively correlated with migration.</p></li>
+<li><p>Urban areas experience higher migration.</p></li>
+</ul>
+<p>Correlation for departure migration is similar (see notebooks for details).
+There were no large differences between males and females.</p>
+<figure class="align-default" id="males-mun-stats-migration-corr-fig">
+<a class="reference internal image-reference" href="_images/male_migri_stats_migration_corr.png"><img alt="_images/male_migri_stats_migration_corr.png" src="_images/male_migri_stats_migration_corr.png" style="height: 500px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 3 </span><span class="caption-text">Correlation of male migration and municipality statistics.</span><a class="headerlink" href="#males-mun-stats-migration-corr-fig" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>We can also plot the correlation of departure migration by years, see <a class="reference internal" href="#male-migri-stats-migration-corr-departure-yearly-fig"><span class="std std-numref">Fig. 4</span></a>, which shows that most features are stable, but that some municipalities apparently have experienced smaller increase of population around the years 2002-2005 and 2020-2022.</p>
+<figure class="align-default" id="male-migri-stats-migration-corr-departure-yearly-fig">
+<a class="reference internal image-reference" href="_images/male_migri_stats_migration_corr_departure_yearly.png"><img alt="_images/male_migri_stats_migration_corr_departure_yearly.png" src="_images/male_migri_stats_migration_corr_departure_yearly.png" style="height: 200px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 4 </span><span class="caption-text">Correlation of male departure migration and municipality statistics.</span><a class="headerlink" href="#male-migri-stats-migration-corr-departure-yearly-fig" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="distibution-of-selected-municipality-features-and-migration">
+<h3>Distibution of selected municipality features and migration<a class="headerlink" href="#distibution-of-selected-municipality-features-and-migration" title="Link to this heading">#</a></h3>
+<p>We can further study the differences between the arrival and the departure municipalities.
+Looking closer at the top six ratio-type features with the largest differences between the arrival and the departure municipalities (for males) in <a class="reference internal" href="#diff-histograms-male-top6-fig"><span class="std std-numref">Fig. 5</span></a> we see that</p>
+<ul class="simple">
+<li><p>Economic dependency ratio tends to be lower in the destination municipalities (less unemployment).</p></li>
+<li><p>People tend to move to municipalities with less of the original population born there (urbanization).</p></li>
+<li><p>Urban dwelling is more popular than rural.</p></li>
+</ul>
+<figure class="align-default" id="diff-histograms-male-top6-fig">
+<a class="reference internal image-reference" href="_images/diff_histograms_males_top6.png"><img alt="_images/diff_histograms_males_top6.png" src="_images/diff_histograms_males_top6.png" style="height: 500px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 5 </span><span class="caption-text">Distribution of ratio-type features between Arrival and Departure municipalities for males, aggregated for years 1990-2023. Top 6 features with the largest absolute weighted (by migration count) mean are shown.</span><a class="headerlink" href="#diff-histograms-male-top6-fig" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Net migration per municipality (arrival - departure) is another interesting feature.
+The PCA plot <a class="reference internal" href="#biplot-male-fig"><span class="std std-numref">Fig. 6</span></a> on municipality net migration and the mean feature values visualizes how net migration seems to be driven by working age population and the share of urban dwellers.
+On the other hand, average age and economic dependency ratio points in the opposite direction of the net migration.
+Another intersting observation is the similarity of the share of persons in peri-urban areas and those aged under 15; perhaps families with children favor peri-urbanicity.</p>
+<figure class="align-default" id="biplot-male-fig">
+<a class="reference internal image-reference" href="_images/biplot_male.png"><img alt="_images/biplot_male.png" src="_images/biplot_male.png" style="height: 500px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 6 </span><span class="caption-text">PCA bilplot for municipality net male migration aggregated for years 1990-2023. Top 20 features and net migration are shown.</span><a class="headerlink" href="#biplot-male-fig" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="do-females-migrate-more-often-and-further">
+<h3>Do females migrate more often and further?<a class="headerlink" href="#do-females-migrate-more-often-and-further" title="Link to this heading">#</a></h3>
+<p>One of the hypotheses set in the beginning was that females migrate more often and further.
+Indeed, for the most largest municipalities excluding Espoo, <a class="reference internal" href="#arrival-mig-by-mun-fig"><span class="std std-numref">Fig. 7</span></a>, females seem to be the more frequent arrivers than males.</p>
+<figure class="align-default" id="arrival-mig-by-mun-fig">
+<a class="reference internal image-reference" href="_images/arrival_mig_by_mun.png"><img alt="_images/arrival_mig_by_mun.png" src="_images/arrival_mig_by_mun.png" style="height: 300px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 7 </span><span class="caption-text">Total arrival migration by municipality and sex for years 1990-2023.</span><a class="headerlink" href="#arrival-mig-by-mun-fig" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Furthermore, females seem to move somewhat further distances than males, <a class="reference internal" href="#female-dist-binned-fig"><span class="std std-numref">Fig. 8</span></a>.
+It is interesting to note that both males and females move further on average in the more recent years than in the 1990s.</p>
+<figure class="align-default" id="female-dist-binned-fig">
+<a class="reference internal image-reference" href="_images/female_male_distance_person_km_binned.png"><img alt="_images/female_male_distance_person_km_binned.png" src="_images/female_male_distance_person_km_binned.png" style="height: 200px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 8 </span><span class="caption-text">Migration distance weighted by migration counts, binned by years.</span><a class="headerlink" href="#female-dist-binned-fig" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="visualizing-migration-flows">
+<h3>Visualizing migration flows<a class="headerlink" href="#visualizing-migration-flows" title="Link to this heading">#</a></h3>
+<p>We can visualize the migrations between municipalities in a map format, as in <a class="reference internal" href="#female-map-migri-binned-fig"><span class="std std-numref">Fig. 9</span></a> (shown for females only).
+The migration magnitude is normalized by the total migration count for each year bin.
+It appears that there is a dozen or so largest municipalities that account for most migrations.
+There does not seem to be big differences between the years, but at least for Oulu, the migration is more frequent in the recent year bins compared to the 1990-1996.</p>
+<figure class="align-default" id="female-map-migri-binned-fig">
+<a class="reference internal image-reference" href="_images/finland_female_migration_binned_normalized.png"><img alt="_images/finland_female_migration_binned_normalized.png" src="_images/finland_female_migration_binned_normalized.png" style="height: 600px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 9 </span><span class="caption-text">Migrations of females shown, binned and normalized by years.</span><a class="headerlink" href="#female-map-migri-binned-fig" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>From the map it is difficult to discern the migrations between specific municipalities.
+On the other hand, the chord diagrams in <a class="reference internal" href="#diff-chords-fig"><span class="std std-numref">Fig. 10</span></a> show pairwise migrations more clearly; the figures show the difference of migration counts to the baseline years 1990-1996.
+Arrow end shows the arrival municipality, and the segment width the total relative migration for the municipality.
+For example, comparing the panel <a class="reference internal" href="#diff-chords-fig"><span class="std std-numref">Fig. 10</span></a>E to <a class="reference internal" href="#diff-chords-fig"><span class="std std-numref">Fig. 10</span></a>A-D we can see that the migration from Espoo to Helsinki has increased, but also from Helsinki to elsewhere.
+Vantaa has experienced greatly increased migration.
+The figure suggests that the total migration is increasing between and into the largest municipalities supporting the urbanization hypothesis.</p>
+<figure class="align-default" id="diff-chords-fig">
+<a class="reference internal image-reference" href="_images/diff_chords_lower-res.png"><img alt="_images/diff_chords_lower-res.png" src="_images/diff_chords_lower-res.png" style="width: 600px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 10 </span><span class="caption-text">Chord diagrams of migration flow between municipalities as a difference to baseline years 1990-1996.</span><a class="headerlink" href="#diff-chords-fig" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="community-detection">
+<h2>Community Detection<a class="headerlink" href="#community-detection" title="Link to this heading">#</a></h2>
+<p>From the maps and the chord diagrams we cannot easily see any possible migration groups formed by municipalities.
+Indeed, the next question arising is whether the municipalities are forming migration communities and how the communities have possibly changed over the years; this is analyzed next.
+The communinity detection was performed for the migration data using the same binned years as before.
+The results are shown in <a class="reference internal" href="#mun-communities-fig"><span class="std std-numref">Fig. 11</span></a>.
+Quite interestingly, we see that Lahti Community has been eaten away by other communities, mostly Tampere and Jyväskylä.
+The finding is interesting and could be analyzed further (out of scope).</p>
+<figure class="align-default" id="mun-communities-fig">
+<a class="reference internal image-reference" href="_images/mun_communities.png"><img alt="_images/mun_communities.png" src="_images/mun_communities.png" style="width: 600px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 11 </span><span class="caption-text">The communities detected for the temporal bins spanning 1990-2023. The largest municipality is shown bolded and named in the figure legend. Municipalities not included in the community detection are in white.</span><a class="headerlink" href="#mun-communities-fig" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="modeling">
+<h2>Modeling<a class="headerlink" href="#modeling" title="Link to this heading">#</a></h2>
+<p>We now have seen that the municipality migration seems to be driven by urbanization when analyzed through the absolute numbers of arrival and departure.
+So far we haven’t however answered which factors might be resposible for municipality attractiveness when compared to other municipalities and controlled by the municipality population count.</p>
+<p>We would like to make a time series model that would incorporate the basic Statistics Finland municipality features from the earlier analyses.
+The initial idea was to supplement the data with a set of selected health indices fetched from Sotkanet and housing prices, but it turned out that for many of the municipalities this data was not readily available.
+The models were therefore fit only on migration and basic municipality statics as detailed below.
+In the models, we consentrate on net migration scaled by the yearly population of the respective municipality.
+This does not control for persons that have migrated from or to other countries, or those born or diseased; this is left for future efforts.</p>
+<p>The <a class="reference internal" href="#net-migri-fig"><span class="std std-numref">Fig. 12</span></a> shows normalized net migration for the 89 municipalities.
+As we can see, the net migration varies a lot by years.</p>
+<figure class="align-default" id="net-migri-fig">
+<a class="reference internal image-reference" href="_images/net-migri.png"><img alt="_images/net-migri.png" src="_images/net-migri.png" style="width: 600px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 12 </span><span class="caption-text">Net municipality migration (arrival - departure) normalized by the yearly population count of the respective municipality.</span><a class="headerlink" href="#net-migri-fig" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<section id="tft-model">
+<h3>TFT model<a class="headerlink" href="#tft-model" title="Link to this heading">#</a></h3>
+<p>We used <code class="docutils literal notranslate"><span class="pre">Darts</span></code> library to fit a Temporal Fusion Transformer (TFT) model on the net migration time series.
+The model was global, meaning that it took as input all municipalities (the migration and basic statistics covariates) at once.
+Municipality labels were encoded as static covariates.
+The model type was chosen due to its explainability and probabilistic ouput useful for sampling based confidence interval calculations.
+<a class="reference external" href="https://unit8co.github.io/darts/index.html#forecasting-models">Alternative</a> models include, e.g., N-BEATS and its variants, but they are not as expalainable as TFT.
+Hyperparemeters were optimized with <code class="docutils literal notranslate"><span class="pre">Optuna</span></code>.</p>
+<p>As an aside, in the initial tries (not shown) we fit a TFT model on the arrival counts and found that the model consistently under-estimated the growing migration trend of the large municipalities.
+This behaviour seems to be in line with TFT being a good local approximator, but struggling with longer time trends.
+The solution was to do a simple linear detrending as a preprocessing step.
+The detrending meant that the TFT model would not have been able to accurately predict the decreasing trends should they happen.
+Alternative to linear detrending, the trend could perhaps have been calculated for a chunck of years at a time, which would have allowed the trend direction to change.</p>
+<p>As we however then decided to concentrate on <em>net migration</em> normalized by the population of the municiaplity, no de-trending was needed, <a class="reference internal" href="#net-migri-fig"><span class="std std-numref">Fig. 12</span></a>.</p>
+<p>The input to the model was comprised of the ratio-type features (apart from the log-transformed land area) which were controlled for correlation, and normalized to zero mean and unit variance.
+There was no missing data.
+The training set comprised the years 1990-2014, and validation the years 2015-2023.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Variable</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Average age, both sexes_arr</p></td>
+</tr>
+<tr class="row-odd"><td><p>Demographic dependency ratio_arr</p></td>
+</tr>
+<tr class="row-even"><td><p>Economic dependency ratio_arr</p></td>
+</tr>
+<tr class="row-odd"><td><p>Land area, km²_arr</p></td>
+</tr>
+<tr class="row-even"><td><p>Population density_arr</p></td>
+</tr>
+<tr class="row-odd"><td><p>Share of Finnish speakers, %_arr</p></td>
+</tr>
+<tr class="row-even"><td><p>Share of foreign citizens, %_arr</p></td>
+</tr>
+<tr class="row-odd"><td><p>Share of persons aged under 15, %_arr</p></td>
+</tr>
+<tr class="row-even"><td><p>Share of persons belonging to other religious groups, %_arr</p></td>
+</tr>
+<tr class="row-odd"><td><p>Share of persons belonging to the Evangelical Lutheran Church, %_arr</p></td>
+</tr>
+<tr class="row-even"><td><p>Share of persons born in the area of residence, %_arr</p></td>
+</tr>
+<tr class="row-odd"><td><p>Share of persons in inner urban area, %_arr</p></td>
+</tr>
+<tr class="row-even"><td><p>Share of persons in local centres in rural areas, %_arr</p></td>
+</tr>
+<tr class="row-odd"><td><p>Share of persons in outer urban area, %_arr</p></td>
+</tr>
+<tr class="row-even"><td><p>Share of persons in peri-urban area, %_arr</p></td>
+</tr>
+<tr class="row-odd"><td><p>Share of persons in rural areas close to urban areas, %_arr</p></td>
+</tr>
+<tr class="row-even"><td><p>Share of persons in rural areas, %_arr</p></td>
+</tr>
+<tr class="row-odd"><td><p>Share of persons in rural heartland areas, %_arr</p></td>
+</tr>
+<tr class="row-even"><td><p>Share of persons in sparsely populated rural areas, %_arr</p></td>
+</tr>
+<tr class="row-odd"><td><p>Share of persons living in the area of birth, %_arr</p></td>
+</tr>
+<tr class="row-even"><td><p>year</p></td>
+</tr>
+<tr class="row-odd"><td><p>net_migration</p></td>
+</tr>
+<tr class="row-even"><td><p>municipality</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="tft-results">
+<h4>TFT results<a class="headerlink" href="#tft-results" title="Link to this heading">#</a></h4>
+<p>TFT turned out to be powerful and easy to overfit to historical data.
+We first performed extensive hyperparameter tuning with Optuna.
+Then a large model was fit, with train and validation loss (mean MAPE) plotted.
+Based on the validation loss, we fit a smaller model to avoid overfitting.
+The predictive performance was not great, with many measured net migrations in the validation set being outside the predicted 95% confidence interval; perhaps the used features were not enough to explain the net migration.</p>
+<p>There was no strict test set, instead we tried to explain which features are important (encoder importance, calculated with <code class="docutils literal notranslate"><span class="pre">Darts</span> <span class="pre">TFTExpalainer</span></code>) for predicting the validation set.
+Although this means there was information leakage from the validation to the training set during the hyperparameter optimization, this is not a big problem here since we could as well have tried to explain the model’s behaviour on the training set.</p>
+<p>Unfortunately, the purported explainability was not achieved:
+We spent a considerable amount of time on trying to fit the TFT model such that the variable importance interpretation would be robust.
+However, even seemingly small changes in the model training protocol or data input lead to different conclusions about the variable importance.</p>
+<p>Nonentheless, below we show the variable importance calculated on the validation set, <a class="reference internal" href="#enc-importance-hclust-fig"><span class="std std-numref">Fig. 13</span></a>.
+We can try to say that</p>
+<ol class="arabic simple">
+<li><p>Past net migration itself is important for explaining the future net migration.</p></li>
+<li><p>Population density seems to be independently important from the other features (apart from the net migration).</p></li>
+<li><p>There is a group of less important features including land area and the demographic dependency.</p></li>
+<li><p>The rest of the features are grouped together.</p></li>
+<li><p>Municipalities tend to be grouped in large clusters, but there are some smaller groups standing out, namely Espoo–Forssa, and Alavus–Eura–Hamina–Heinola.</p></li>
+</ol>
+<p><strong>However, these intrepretations are not reliable due to the TFT model fitting difficulties!</strong></p>
+<figure class="align-default" id="enc-importance-hclust-fig">
+<a class="reference internal image-reference" href="_images/enc-importance-hclust.png"><img alt="_images/enc-importance-hclust.png" src="_images/enc-importance-hclust.png" style="width: 600px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 13 </span><span class="caption-text">Variable importance in the TFT model for validation set, with features and municipalities clustered. Importance log-transformed for larger visual contrast.</span><a class="headerlink" href="#enc-importance-hclust-fig" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="lightgbm-model">
+<h3>LightGBM model<a class="headerlink" href="#lightgbm-model" title="Link to this heading">#</a></h3>
+<p>To address the uncertainty with the TFT model, the same input was used to fit a LightGBM model.
+The input was as with the TFT model, but in tabular form, and was randomly split to train, validation and test set (3:1:1).
+Hyperparameters were optimized with Optuna and the model output (RMSE relative to min-to-max range on the test set was 7.49%) explained with SHAP,  <a class="reference internal" href="#lgb-shap-train-fig"><span class="std std-numref">Fig. 14</span></a>.
+Although the model is simple, there are interesting observations to be made, but should be taken with caution.</p>
+<ol class="arabic simple">
+<li><p>Higher economic dependecy ratio is associated with lower migration propensity.</p></li>
+<li><p>Higher share of persons in rural areas close to urban areas are somewhat surprisingly associated with higher net migration.</p></li>
+<li><p>Higher share of children aged under 15 increase net migration.</p></li>
+<li><p>Lower average age is associated with a higher net migration.</p></li>
+<li><p>The most attractive municipalities are quite small in population.</p></li>
+</ol>
+<figure class="align-default" id="lgb-shap-train-fig">
+<a class="reference internal image-reference" href="_images/lgb-shap-train.png"><img alt="_images/lgb-shap-train.png" src="_images/lgb-shap-train.png" style="width: 600px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 14 </span><span class="caption-text">SHAP-values for the training set of the LightGBM model for the six most important variables. Ten municipalities with the largest net migration summed for years 1990-2023 shown in color.</span><a class="headerlink" href="#lgb-shap-train-fig" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="conclusions">
+<h2>Conclusions<a class="headerlink" href="#conclusions" title="Link to this heading">#</a></h2>
+<p>All in all, valuable information on municipality migration in Finland was discovered through the analyses and models.
+Reflecting at the intial hypothesis, we found evidence that:</p>
+<ul class="simple">
+<li><p>In absolute migration counts, people tend to move to and from the bigger municipalities (urbanization).</p></li>
+<li><p>Females move more frequently and further.</p></li>
+<li><p>When normalized by municipality population, the largest municipalities do not experience the most net migration on average.</p></li>
+<li><p>There are migration municipality communities formed, and the communities have changed over the years.</p></li>
+<li><p>Modeling normalized net migration time series with TFT is difficult with the data available here.</p></li>
+<li><p>Good economic situation and young or working-age population increase the net migration.</p></li>
+</ul>
+<p>There are many ways the project could be made better or extended.
+The future efforts could include:</p>
+<ul class="simple">
+<li><p>Including migration from and to other countries.</p></li>
+<li><p>Accounting for births and deaths.</p></li>
+<li><p>Statistical hypothesis testing.</p></li>
+<li><p>More careful time series modeling (e.g., analyzing autocorrelation).</p></li>
+<li><p>Clustering of the time series with, e.g., <a class="reference external" href="https://tslearn.readthedocs.io/en/stable/user_guide/dtw.html#dtw">DTW</a>.</p></li>
+<li><p>Time series featurization for LightGBM model with, e.g., <a class="reference external" href="https://tsfresh.readthedocs.io/en/latest/">tsfresh</a>.</p></li>
+<li><p>Adding migration distance to the models (many probably tend to move close).</p></li>
+<li><p>Including Sotkanet data by looking for more complete variables or averaging over the larger areas.</p></li>
+<li><p>Consulting demographics experts.</p></li>
+</ul>
+</section>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="right-next"
+       href="notebooks/tk-data-fetch.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Municipality data from Statistics Finland (Tilastokeskus, TK)</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-collection-and-preprocessing">Data Collection and Preprocessing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exploratory-data-analysis">Exploratory Data Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#missing-values-and-preprocessing">Missing values and preprocessing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sotkanet-data-correlations">Sotkanet data correlations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#correlations-of-migration-and-municipality-statistics">Correlations of migration and municipality statistics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distibution-of-selected-municipality-features-and-migration">Distibution of selected municipality features and migration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#do-females-migrate-more-often-and-further">Do females migrate more often and further?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-migration-flows">Visualizing migration flows</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#community-detection">Community Detection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modeling">Modeling</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tft-model">TFT model</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tft-results">TFT results</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lightgbm-model">LightGBM model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusions">Conclusions</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By KV
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1566 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Data preparation for time series models &#8212; Finnish Municipality Migration Analysis</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/ts-data-preparation';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Time series modeling" href="tk-darts-tft-global.html" />
+    <link rel="prev" title="Analyze for migration communities by years" href="tk-migri-community.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Finnish Municipality Migration Analysis</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Data Science Mini-Project
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Data collection and preprocessing</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tk-data-fetch.html">Municipality data from Statistics Finland (Tilastokeskus, TK)</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="sotkanet-municipality.html">Sotkanet indicators</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Exploratory data analysis (EDA) and visualizations</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tk-data-basic-eda.html">Analysis of basic municipality statistics and migration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Community detection</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tk-migri-community.html">Analyze for migration communities by years</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Modeling</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Data preparation for time series models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tk-darts-tft-global.html">Time series modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tk-lightgbm-common_data.html">LightGBM model on migration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Environment</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../environment.html">The main environment used for the modeling</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/ts-data-preparation.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Data preparation for time series models</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supplement-with-sotkanet-and-with-dwelling-price-data">Supplement with Sotkanet and with dwelling price data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-net-migration">Prepare net migration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-net-migration-time-series">Plot net migration time series</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#covariates">Covariates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#drop-count-variables">Drop count variables</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="data-preparation-for-time-series-models">
+<h1>Data preparation for time series models<a class="headerlink" href="#data-preparation-for-time-series-models" title="Link to this heading">#</a></h1>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shap</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.formula.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">smf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lightgbm</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">lgb</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">optuna</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">darts</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimeSeries</span>
+
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">darts</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimeSeries</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">darts.dataprocessing.transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Scaler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">darts.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegressionModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">darts.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">mae</span><span class="p">,</span> <span class="n">mape</span><span class="p">,</span> <span class="n">rmse</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">tsfresh</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_features</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.cluster</span><span class="w"> </span><span class="kn">import</span> <span class="n">KMeans</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">mean_squared_error</span><span class="p">,</span> <span class="n">r2_score</span><span class="p">,</span> <span class="n">mean_absolute_error</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">f_oneway</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.multicomp</span><span class="w"> </span><span class="kn">import</span> <span class="n">pairwise_tukeyhsd</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">optuna</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">darts.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">mape</span><span class="p">,</span> <span class="n">mae</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pytorch_lightning.callbacks</span><span class="w"> </span><span class="kn">import</span> <span class="n">EarlyStopping</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">darts.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">TFTModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">darts.explainability.tft_explainer</span><span class="w"> </span><span class="kn">import</span> <span class="n">TFTExplainer</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/kuura/anaconda3/envs/nuwats_env/lib/python3.9/site-packages/statsforecast/utils.py:231: FutureWarning: &#39;M&#39; is deprecated and will be removed in a future version, please use &#39;ME&#39; instead.
+  &quot;ds&quot;: pd.date_range(start=&quot;1949-01-01&quot;, periods=len(AirPassengers), freq=&quot;M&quot;),
+The StatsForecast module could not be imported. To enable support for the StatsForecastAutoARIMA, StatsForecastAutoETS and Croston models, please consider installing it.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mun_stats</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/statfin_vaerak_pxt_11ra_municipalities.csv&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">mun_migri</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/statfin_muutl_pxt_11a1_municipalities.csv&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pop_stats</span> <span class="o">=</span> \
+    <span class="p">(</span><span class="n">mun_stats</span>
+     <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mun_stats</span><span class="p">[</span><span class="s2">&quot;Information&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Population 31 Dec&quot;</span><span class="p">,</span> <span class="p">:]</span>
+     <span class="o">.</span><span class="n">melt</span><span class="p">(</span>
+        <span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Area&quot;</span><span class="p">,</span> <span class="s2">&quot;Information&quot;</span><span class="p">],</span>
+        <span class="n">var_name</span><span class="o">=</span><span class="s2">&quot;year&quot;</span><span class="p">,</span>
+        <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;Population 31 Dec&quot;</span><span class="p">)</span>
+     <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Information&quot;</span><span class="p">])</span>
+     <span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;Area&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;year&quot;</span><span class="p">)</span>
+     <span class="c1"># .astype(&#39;int&#39;)</span>
+     <span class="o">.</span><span class="n">describe</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">muns_of_interest</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pop_stats</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">(</span><span class="n">pop_stats</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="s2">&quot;min&quot;</span><span class="p">]]</span> <span class="o">&gt;</span> <span class="mi">10000</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">droplevel</span><span class="p">())</span>
+<span class="c1"># muns_of_interest = pop_stats.loc[[&quot;min&quot;]].transpose().reset_index().sort_values(by=&quot;min&quot;)[-10:][&quot;Area&quot;].values</span>
+<span class="n">muns_of_interest</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">muns_of_interest</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<section id="supplement-with-sotkanet-and-with-dwelling-price-data">
+<h2>Supplement with Sotkanet and with dwelling price data<a class="headerlink" href="#supplement-with-sotkanet-and-with-dwelling-price-data" title="Link to this heading">#</a></h2>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">indicators</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">180</span><span class="p">:</span> <span class="s1">&#39;Measure of educational level&#39;</span><span class="p">,</span>
+    <span class="mi">181</span><span class="p">:</span> <span class="s1">&#39;Unemployed people, as </span><span class="si">% o</span><span class="s1">f labour force&#39;</span><span class="p">,</span>
+    <span class="c1"># 190: &#39;Household-dwelling units with children living in overcrowded conditions, as % of all households with children&#39;,</span>
+    <span class="c1"># 191: &#39;Placements outside the home for those aged 0-17, as % of total population of same age (THL)&#39;,</span>
+    <span class="mi">289</span><span class="p">:</span> <span class="s1">&#39;Heavy drinking at least once a month, as </span><span class="si">% o</span><span class="s1">f all pupils in 8th and 9th year of comprehensive school&#39;</span><span class="p">,</span>
+    <span class="mi">306</span><span class="p">:</span> <span class="s1">&#39;Disability pension recipients aged 25-64, as </span><span class="si">% o</span><span class="s1">f total population of the same age&#39;</span><span class="p">,</span>
+    <span class="mi">493</span><span class="p">:</span> <span class="s1">&#39;Social assistance, recipient persons during year, as </span><span class="si">% o</span><span class="s1">f total population&#39;</span><span class="p">,</span>
+    <span class="mi">3105</span><span class="p">:</span> <span class="s1">&#39;Alcohol mortality per 100 000 inhabitant&#39;</span><span class="p">,</span>
+    <span class="mi">3169</span><span class="p">:</span> <span class="s1">&#39;Parturients who smoked during pregnancy, </span><span class="si">% o</span><span class="s1">f parturients&#39;</span><span class="p">,</span>
+    <span class="mi">3113</span><span class="p">:</span> <span class="s1">&#39;Offences against life and health recorded by the police per 1000 inhabitants&#39;</span><span class="p">,</span>
+    <span class="c1"># 3219: &#39;Those aged 17 - 24 not in education or training, as % of total population of same age&#39;,</span>
+    <span class="mi">3071</span><span class="p">:</span> <span class="s1">&#39;Persons who are difficult to employ (structural unemployment), as </span><span class="si">% o</span><span class="s1">f persons aged 15 - 64&#39;</span><span class="p">,</span>
+    <span class="mi">3076</span><span class="p">:</span> <span class="s1">&#39;Voting turnout in municipal elections, %&#39;</span><span class="p">,</span>
+    <span class="c1"># 4404: &#39;Daily smokers (%)&#39;</span>
+    <span class="c1"># 5333: &#39;Municipality employs a designated expert, planning officer or similar to coordinate health and welfare promotion&#39;</span>
+    <span class="c1"># 5338: &#39;Performance indicator average (health and welfare coefficient)&#39;</span>
+<span class="p">}</span>
+
+<span class="n">years</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1990</span><span class="p">,</span> <span class="mi">2024</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Configuration</span>
+<span class="n">HEADERS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;MunicipalityAnalysis/1.0&quot;</span><span class="p">}</span>
+<span class="n">SOTKANET_BASE</span> <span class="o">=</span> <span class="s2">&quot;https://sotkanet.fi/rest/1.1/json?&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_sotkanet_data</span><span class="p">(</span><span class="n">indicator_ids</span><span class="p">,</span> <span class="n">years</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch data for multiple indicators from Sotkanet&quot;&quot;&quot;</span>
+    <span class="n">df_list</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">indicator_id</span> <span class="ow">in</span> <span class="n">indicator_ids</span><span class="p">:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">SOTKANET_BASE</span><span class="si">}</span><span class="s2">indicator=</span><span class="si">{</span><span class="n">indicator_id</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">years</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&amp;years=</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">url</span> <span class="o">+=</span> <span class="s2">&quot;&amp;genders=total&quot;</span>
+        
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">HEADERS</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        
+        <span class="c1"># Convert to DataFrame</span>
+        <span class="n">temp_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">temp_df</span><span class="p">[</span><span class="s1">&#39;indicator_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">indicator_id</span>
+        <span class="n">df_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp_df</span><span class="p">)</span>
+    
+    <span class="n">final_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">df_list</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">final_df</span>
+
+<span class="c1"># data = get_sotkanet_data(indicators, years)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/sotka_data.csv&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sotka_corr</span> <span class="o">=</span> \
+    <span class="p">(</span><span class="n">data</span><span class="p">[[</span><span class="s2">&quot;indicator&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">]]</span>
+     <span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;year&quot;</span><span class="p">],</span> 
+        <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;indicator&quot;</span><span class="p">,</span>
+        <span class="n">values</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+     <span class="o">.</span><span class="n">corr</span><span class="p">())</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">sotka_corr</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;coolwarm&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">xticklabels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">yticklabels</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">False</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/4ec6e202f51bbe3f139d45c544c8270e31cc67e754265ce71bb3718d7deddc05.png" src="../_images/4ec6e202f51bbe3f139d45c544c8270e31cc67e754265ce71bb3718d7deddc05.png" />
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get current municipality codes (KUNTA regions)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_municipality_codes</span><span class="p">():</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://sotkanet.fi/rest/1.1/regions&quot;</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">HEADERS</span><span class="p">)</span>
+    <span class="n">regions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+    <span class="c1">#  return regions[regions[&#39;category&#39;] == &#39;KUNTA&#39;][[&#39;code&#39;, &#39;title&#39;]]  # &lt;- code?</span>
+    <span class="k">return</span> <span class="n">regions</span><span class="p">[</span><span class="n">regions</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;KUNTA&#39;</span><span class="p">][[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">]]</span>
+
+<span class="n">municipalities</span> <span class="o">=</span> <span class="n">get_municipality_codes</span><span class="p">()</span>
+<span class="n">municipalities</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">municipalities</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">municipalities</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/sotka_municipalities.csv&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># municipalities.to_csv(&quot;data/sotka_municipalities.csv&quot;)</span>
+<span class="c1"># data.to_csv(&quot;data/sotka_data.csv&quot;)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">municipalities</span><span class="p">[</span><span class="s1">&#39;municipality&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">municipalities</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">eval</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="s1">&#39;fi&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Merge with data</span>
+<span class="n">sotka_mun_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+    <span class="n">municipalities</span><span class="p">,</span> 
+    <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;region&#39;</span><span class="p">,</span> 
+    <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">,</span>
+    <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span>
+<span class="p">)</span>
+
+<span class="n">sotka_mun_data</span> <span class="o">=</span> <span class="n">sotka_mun_data</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">])</span>
+<span class="n">sotka_mun_data</span><span class="p">[</span><span class="s1">&#39;municipality&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sotka_mun_data</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">eval</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="s1">&#39;fi&#39;</span><span class="p">])</span>
+<span class="n">sotka_mun_data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;absValue&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sotka_mun_data.loc[(sotka_mun_data[&#39;municipality&#39;] == &#39;Turku&#39;) &amp; (sotka_mun_data[&#39;indicator&#39;] == 180), :]</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">price_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/statfin_ashi_pxt_13mz.csv&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">price_data</span><span class="p">[</span><span class="s1">&#39;Region&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">price_data</span><span class="p">[</span><span class="s1">&#39;Region&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;Espoo-Kauniainen&#39;</span><span class="p">,</span> <span class="s1">&#39;Espoo&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sotka_mun_data</span> <span class="o">=</span> <span class="n">sotka_mun_data</span><span class="p">[</span><span class="n">sotka_mun_data</span><span class="o">.</span><span class="n">municipality</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">muns_of_interest</span><span class="p">)]</span>
+<span class="n">price_data</span> <span class="o">=</span> <span class="n">price_data</span><span class="p">[</span><span class="n">price_data</span><span class="o">.</span><span class="n">Region</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">muns_of_interest</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+</section>
+<section id="prepare-net-migration">
+<h2>Prepare net migration<a class="headerlink" href="#prepare-net-migration" title="Link to this heading">#</a></h2>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">full_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/full_arr_dep_stats.csv&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate total arrivals per municipality per year</span>
+<span class="n">arrivals</span> <span class="o">=</span> <span class="n">full_data</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;Arrival&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">])[</span><span class="s1">&#39;Migration&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">arrivals</span> <span class="o">=</span> <span class="n">arrivals</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Arrival&#39;</span><span class="p">:</span> <span class="s1">&#39;municipality&#39;</span><span class="p">,</span> <span class="s1">&#39;Migration&#39;</span><span class="p">:</span> <span class="s1">&#39;arrivals&#39;</span><span class="p">})</span>
+
+<span class="c1"># Calculate total departures per municipality per year</span>
+<span class="n">departures</span> <span class="o">=</span> <span class="n">full_data</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;Departure&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">])[</span><span class="s1">&#39;Migration&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">departures</span> <span class="o">=</span> <span class="n">departures</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Departure&#39;</span><span class="p">:</span> <span class="s1">&#39;municipality&#39;</span><span class="p">,</span> <span class="s1">&#39;Migration&#39;</span><span class="p">:</span> <span class="s1">&#39;departures&#39;</span><span class="p">})</span>
+
+<span class="c1"># Merge arrivals and departures</span>
+<span class="n">net_migration</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">arrivals</span><span class="p">,</span> <span class="n">departures</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;municipality&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;outer&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Calculate net migration</span>
+<span class="n">net_migration</span><span class="p">[</span><span class="s1">&#39;net_migration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">net_migration</span><span class="p">[</span><span class="s1">&#39;arrivals&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">net_migration</span><span class="p">[</span><span class="s1">&#39;departures&#39;</span><span class="p">]</span>
+
+<span class="c1"># Sort</span>
+<span class="n">net_migration</span> <span class="o">=</span> <span class="n">net_migration</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;municipality&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">full_data</span> <span class="o">=</span> <span class="n">full_data</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">net_migration</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Arrival&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">],</span> <span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;municipality&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">full_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[((</span><span class="n">full_data</span><span class="p">[</span><span class="s2">&quot;Arrival&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">muns_of_interest</span><span class="p">))</span> <span class="o">&amp;</span> 
+                    <span class="p">(</span><span class="n">full_data</span><span class="p">[</span><span class="s2">&quot;Departure&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">muns_of_interest</span><span class="p">))),</span>  <span class="p">:]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="o">~</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;_diff|_dep&#39;</span><span class="p">)]</span>  <span class="c1"># Interested in Arrival mun stats only</span>
+<span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Area&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sotka_wide</span> <span class="o">=</span> \
+    <span class="n">sotka_mun_data</span><span class="p">[[</span><span class="s2">&quot;indicator&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;municipality&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span>
+        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="s2">&quot;municipality&quot;</span><span class="p">],</span>
+        <span class="n">values</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+        <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;indicator&quot;</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_sotka_price</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">sotka_wide</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;municipality&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">],</span> <span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;municipality&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">))</span>
+<span class="n">df_sotka_price</span> <span class="o">=</span> <span class="n">df_sotka_price</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">price_data</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;municipality&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">],</span> <span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Region&quot;</span><span class="p">,</span> <span class="s2">&quot;Year&quot;</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+
+<span class="c1"># check NAs</span>
+<span class="c1">#pd.DataFrame(df_sotka_price.groupby([&#39;municipality&#39;, &#39;year&#39;])</span>
+<span class="c1">#             .first()</span>
+<span class="c1">#             .groupby([&#39;municipality&#39;])</span>
+<span class="c1">#             .apply(lambda g: g.isna().sum()))</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Normalize</span>
+
+<span class="n">df_sotka_price</span><span class="p">[</span><span class="s1">&#39;net_migration&#39;</span><span class="p">]</span> <span class="o">/=</span> <span class="n">df_sotka_price</span><span class="p">[</span><span class="s2">&quot;Population 31 Dec_arr&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">df_sotka_price</span><span class="p">[</span><span class="s1">&#39;net_migration&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;net_migration&#39;, ylabel=&#39;Count&#39;&gt;
+</pre></div>
+</div>
+<img alt="../_images/aa41b7b40f0e36659b23bb2e6ea1f0b7c3a01ed9af05fa2ba783fadf76df001d.png" src="../_images/aa41b7b40f0e36659b23bb2e6ea1f0b7c3a01ed9af05fa2ba783fadf76df001d.png" />
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### take first, sum Migration</span>
+
+<span class="n">df_agg</span> <span class="o">=</span> <span class="n">df_sotka_price</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="s2">&quot;municipality&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">first</span><span class="p">()[</span><span class="s2">&quot;net_migration&quot;</span><span class="p">]</span>
+<span class="n">df_agg</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df_agg</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+</section>
+<section id="plot-net-migration-time-series">
+<h2>Plot net migration time series<a class="headerlink" href="#plot-net-migration-time-series" title="Link to this heading">#</a></h2>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pivoted_df</span> <span class="o">=</span> <span class="n">df_agg</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;municipality&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;net_migration&#39;</span><span class="p">)</span>
+
+<span class="c1"># datetime index</span>
+<span class="n">pivoted_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">pivoted_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;%Y&#39;</span><span class="p">)</span>
+
+<span class="c1"># multivariate series</span>
+<span class="n">multiseries</span> <span class="o">=</span> <span class="n">TimeSeries</span><span class="o">.</span><span class="n">from_dataframe</span><span class="p">(</span><span class="n">pivoted_df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># List some colors</span>
+
+<span class="n">color_list</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;#1f77b4&#39;</span><span class="p">,</span> <span class="s1">&#39;#ff7f0e&#39;</span><span class="p">,</span> <span class="s1">&#39;#2ca02c&#39;</span><span class="p">,</span> <span class="s1">&#39;#d62728&#39;</span><span class="p">,</span> 
+    <span class="s1">&#39;#9467bd&#39;</span><span class="p">,</span> <span class="s1">&#39;#8c564b&#39;</span><span class="p">,</span> <span class="s1">&#39;#e377c2&#39;</span><span class="p">,</span> <span class="s1">&#39;#7f7f7f&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#bcbd22&#39;</span><span class="p">,</span> <span class="s1">&#39;#17becf&#39;</span><span class="p">,</span> <span class="s1">&#39;#aec7e8&#39;</span><span class="p">,</span> <span class="s1">&#39;#ffbb78&#39;</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mcolors</span>
+
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>  <span class="c1"># Set figure size first</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">municipality</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pivoted_df</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+    <span class="c1">#if municipality != &quot;Helsinki&quot;:</span>
+    <span class="c1">#    continue</span>
+    <span class="n">ts</span> <span class="o">=</span> <span class="n">TimeSeries</span><span class="o">.</span><span class="n">from_dataframe</span><span class="p">(</span><span class="n">pivoted_df</span><span class="p">[[</span><span class="n">municipality</span><span class="p">]])</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">label</span><span class="o">=</span><span class="n">municipality</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">color_list</span><span class="p">[</span><span class="n">idx</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">color_list</span><span class="p">)],</span>  <span class="c1"># Loop through colors</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span>
+        <span class="c1"># marker=&#39;o&#39;  </span>
+    <span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Net Migration by Municipality&quot;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="c1"># plt.legend(bbox_to_anchor=(1.05, 1), loc=&#39;upper left&#39;)  # Move legend outside</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;images/net_migri_norm.png&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/ab932b7512ff5934126f7203f38c283c72692c6f83a228e5a5e265d281b36f7b.png" src="../_images/ab932b7512ff5934126f7203f38c283c72692c6f83a228e5a5e265d281b36f7b.png" />
+</div>
+</div>
+</section>
+<section id="covariates">
+<h2>Covariates<a class="headerlink" href="#covariates" title="Link to this heading">#</a></h2>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_agg_w_stats</span> <span class="o">=</span> <span class="n">df_sotka_price</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;municipality&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Sex&quot;</span><span class="p">,</span> <span class="s2">&quot;Departure&quot;</span><span class="p">,</span> <span class="s2">&quot;Migration&quot;</span><span class="p">,</span> <span class="s2">&quot;Region&quot;</span><span class="p">,</span> <span class="s2">&quot;Year&quot;</span><span class="p">,</span> <span class="s2">&quot;Arrival&quot;</span><span class="p">,</span> <span class="s2">&quot;net_migration&quot;</span><span class="p">])</span>
+
+<span class="n">df_agg_w_stats</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">df_agg_w_stats</span> <span class="o">=</span> <span class="n">df_agg_w_stats</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df_agg</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;municipality&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">])</span>
+
+<span class="n">static_covs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">df_agg_w_stats</span><span class="p">[</span><span class="s2">&quot;municipality&quot;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;municipality&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Select numerical columns that have missing values</span>
+<span class="n">num_cols_with_na</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df_agg_w_stats</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span> 
+                    <span class="k">if</span> <span class="n">df_agg_w_stats</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">()]</span>
+
+<span class="c1"># Fill missing values in each numerical column by Municipality-wise mean</span>
+<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">num_cols_with_na</span><span class="p">:</span>
+    <span class="n">df_agg_w_stats</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_agg_w_stats</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_agg_w_stats</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;municipality&#39;</span><span class="p">)[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="s1">&#39;mean&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># There are still NAs</span>
+
+<span class="n">num_cols_with_na</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df_agg_w_stats</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span> 
+                    <span class="k">if</span> <span class="n">df_agg_w_stats</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">()]</span>
+<span class="n">num_cols_with_na</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[180, 181, 289, 306, 493, 3071, 3076, 3113, 3169, &#39;Index (2000=100)&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We&#39;d like to keep the price Index information &#39;Index (2000=100)&#39;</span>
+
+<span class="c1"># Group by municipality and check if all values in &#39;Index (2000=100)&#39; are NaN</span>
+<span class="n">municipalities_all_na</span> <span class="o">=</span> <span class="n">df_agg_w_stats</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;municipality&#39;</span><span class="p">)[</span><span class="s1">&#39;Index (2000=100)&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+
+<span class="c1"># Filter municipalities where the condition is True</span>
+<span class="n">municipalities_with_all_na</span> <span class="o">=</span> <span class="n">municipalities_all_na</span><span class="p">[</span><span class="n">municipalities_all_na</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Municipalities with all NAs in &#39;Index (2000=100)&#39;:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">municipalities_with_all_na</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Municipalities with all NAs in &#39;Index (2000=100)&#39;:
+[&#39;Akaa&#39;, &#39;Alavus&#39;, &#39;Eura&#39;, &#39;Forssa&#39;, &#39;Hamina&#39;, &#39;Heinola&#39;, &#39;Hollola&#39;, &#39;Hyvinkää&#39;, &#39;Iisalmi&#39;, &#39;Ilmajoki&#39;, &#39;Imatra&#39;, &#39;Jakobstad&#39;, &#39;Janakkala&#39;, &#39;Jämsä&#39;, &#39;Järvenpää&#39;, &#39;Kaarina&#39;, &#39;Kalajoki&#39;, &#39;Kangasala&#39;, &#39;Kankaanpää&#39;, &#39;Kauhajoki&#39;, &#39;Kauhava&#39;, &#39;Kemi&#39;, &#39;Kerava&#39;, &#39;Kirkkonummi&#39;, &#39;Kontiolahti&#39;, &#39;Korsholm&#39;, &#39;Kurikka&#39;, &#39;Kuusamo&#39;, &#39;Lapua&#39;, &#39;Laukaa&#39;, &#39;Lempäälä&#39;, &#39;Lieksa&#39;, &#39;Lieto&#39;, &#39;Liperi&#39;, &#39;Lohja&#39;, &#39;Loimaa&#39;, &#39;Loviisa&#39;, &#39;Mariehamn&#39;, &#39;Mäntsälä&#39;, &#39;Naantali&#39;, &#39;Nivala&#39;, &#39;Nokia&#39;, &#39;Nurmijärvi&#39;, &#39;Orimattila&#39;, &#39;Pargas&#39;, &#39;Pieksämäki&#39;, &#39;Pirkkala&#39;, &#39;Raahe&#39;, &#39;Raisio&#39;, &#39;Riihimäki&#39;, &#39;Salo&#39;, &#39;Sastamala&#39;, &#39;Savonlinna&#39;, &#39;Siilinjärvi&#39;, &#39;Sipoo&#39;, &#39;Sotkamo&#39;, &#39;Tornio&#39;, &#39;Tuusula&#39;, &#39;Ulvila&#39;, &#39;Uusikaupunki&#39;, &#39;Valkeakoski&#39;, &#39;Varkaus&#39;, &#39;Vihti&#39;, &#39;Ylivieska&#39;, &#39;Ylöjärvi&#39;, &#39;Äänekoski&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Okay, let&#39;s just remove the price data as well</span>
+
+<span class="n">df_agg_w_stats</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">num_cols_with_na</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">([</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df_agg_w_stats</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span> 
+                    <span class="k">if</span> <span class="n">df_agg_w_stats</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">()])</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_agg_w_stats</span><span class="o">.</span><span class="n">dtypes</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>municipality                                                             object
+year                                                                      int64
+Average age, both sexes_arr                                             float64
+Average age, men_arr                                                    float64
+Average age, women_arr                                                  float64
+Citizens of foreign countries_arr                                       float64
+Demographic dependency ratio_arr                                        float64
+Economic dependency ratio_arr                                           float64
+Finnish speakers_arr                                                    float64
+Foreign-language speakers_arr                                           float64
+Increase of population_arr                                              float64
+Increase of population, %_arr                                           float64
+Land area, km²_arr                                                      float64
+Persons born abroad_arr                                                 float64
+Persons born elsewhere than in their area of residence_arr              float64
+Persons born in the area belonging to the population_arr                float64
+Persons born in their area of residence_arr                             float64
+Persons with foreign background_arr                                     float64
+Population 31 Dec_arr                                                   float64
+Population density_arr                                                  float64
+Sami speakers_arr                                                       float64
+Share of Finnish speakers, %_arr                                        float64
+Share of Swedish speakers, %_arr                                        float64
+Share of foreign citizens, %_arr                                        float64
+Share of foreign-language speakers, %_arr                               float64
+Share of persons aged 15 to 64, %_arr                                   float64
+Share of persons aged 65 or over, %_arr                                 float64
+Share of persons aged under 15, %_arr                                   float64
+Share of persons belonging to other religious groups, %_arr             float64
+Share of persons belonging to the Evangelical Lutheran Church, %_arr    float64
+Share of persons born abroad, %_arr                                     float64
+Share of persons born in the area of residence, %_arr                   float64
+Share of persons in inner urban area, %_arr                             float64
+Share of persons in local centres in rural areas, %_arr                 float64
+Share of persons in outer urban area, %_arr                             float64
+Share of persons in peri-urban area, %_arr                              float64
+Share of persons in rural areas close to urban areas, %_arr             float64
+Share of persons in rural areas, %_arr                                  float64
+Share of persons in rural heartland areas, %_arr                        float64
+Share of persons in sparsely populated rural areas, %_arr               float64
+Share of persons in urban areas, %_arr                                  float64
+Share of persons living in the area of birth, %_arr                     float64
+Share of persons with foreign background , %_arr                        float64
+Share of persons with no religious affiliation, %_arr                   float64
+Swedish speakers_arr                                                    float64
+arrivals                                                                  int64
+departures                                                                int64
+net_migration                                                           float64
+dtype: object
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="drop-count-variables">
+<h2>Drop count variables<a class="headerlink" href="#drop-count-variables" title="Link to this heading">#</a></h2>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_agg_w_stats</span> <span class="o">=</span> <span class="n">df_agg_w_stats</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+    <span class="s1">&#39;Persons with foreign background_arr&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Persons born abroad_arr&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Persons born elsewhere than in their area of residence_arr&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Persons born in the area belonging to the population_arr&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Persons born in their area of residence_arr&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Increase of population_arr&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Increase of population, %_arr&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Foreign-language speakers_arr&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Finnish speakers_arr&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Swedish speakers_arr&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Sami speakers_arr&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Citizens of foreign countries_arr&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Population 31 Dec_arr&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;arrivals&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;departures&#39;</span><span class="p">,</span>  
+<span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_agg_w_stats</span><span class="p">[</span><span class="s1">&#39;Land area, km²_arr&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">df_agg_w_stats</span><span class="p">[</span><span class="s1">&#39;Land area, km²_arr&#39;</span><span class="p">])</span>
+
+<span class="c1"># df_agg_w_stats = df_agg_w_stats.loc[:, </span>
+<span class="c1">#     ~df_agg_w_stats.columns.str.contains(&#39;Sami&#39;)]</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Let&#39;s remove highly correlated if any</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">remove_correlated_features</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.95</span><span class="p">):</span>
+    <span class="c1"># Create correlation matrix</span>
+    <span class="n">corr_matrix</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
+    
+    <span class="c1"># Select upper triangle of correlation matrix</span>
+    <span class="n">upper_tri</span> <span class="o">=</span> <span class="n">corr_matrix</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">triu</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">corr_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
+    
+    <span class="c1"># Find features with correlation &gt; threshold</span>
+    <span class="n">to_drop</span> <span class="o">=</span> <span class="p">[</span><span class="n">column</span> <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">upper_tri</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">upper_tri</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">)]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">to_drop</span><span class="p">)</span>
+    
+    <span class="c1"># Drop features</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">to_drop</span><span class="p">)</span>
+    
+<span class="n">_df</span> <span class="o">=</span> <span class="n">df_agg_w_stats</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="s2">&quot;net_migration&quot;</span><span class="p">,</span> <span class="s2">&quot;municipality&quot;</span><span class="p">])</span>
+<span class="n">_df</span> <span class="o">=</span> <span class="n">remove_correlated_features</span><span class="p">(</span><span class="n">_df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;Average age, men_arr&#39;, &#39;Average age, women_arr&#39;, &#39;Share of Swedish speakers, %_arr&#39;, &#39;Share of foreign-language speakers, %_arr&#39;, &#39;Share of persons aged 15 to 64, %_arr&#39;, &#39;Share of persons aged 65 or over, %_arr&#39;, &#39;Share of persons born abroad, %_arr&#39;, &#39;Share of persons in urban areas, %_arr&#39;, &#39;Share of persons with foreign background , %_arr&#39;, &#39;Share of persons with no religious affiliation, %_arr&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_df</span><span class="p">[</span><span class="s2">&quot;year&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_agg_w_stats</span><span class="p">[</span><span class="s2">&quot;year&quot;</span><span class="p">]</span>
+<span class="n">_df</span><span class="p">[</span><span class="s2">&quot;net_migration&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_agg_w_stats</span><span class="p">[</span><span class="s2">&quot;net_migration&quot;</span><span class="p">]</span>
+<span class="n">_df</span><span class="p">[</span><span class="s2">&quot;municipality&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_agg_w_stats</span><span class="p">[</span><span class="s2">&quot;municipality&quot;</span><span class="p">]</span>
+<span class="n">df_agg_w_stats</span> <span class="o">=</span> <span class="n">_df</span>
+<span class="n">df_agg_w_stats</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Average age, both sexes_arr</th>
+      <th>Demographic dependency ratio_arr</th>
+      <th>Economic dependency ratio_arr</th>
+      <th>Land area, km²_arr</th>
+      <th>Population density_arr</th>
+      <th>Share of Finnish speakers, %_arr</th>
+      <th>Share of foreign citizens, %_arr</th>
+      <th>Share of persons aged under 15, %_arr</th>
+      <th>Share of persons belonging to other religious groups, %_arr</th>
+      <th>Share of persons belonging to the Evangelical Lutheran Church, %_arr</th>
+      <th>...</th>
+      <th>Share of persons in outer urban area, %_arr</th>
+      <th>Share of persons in peri-urban area, %_arr</th>
+      <th>Share of persons in rural areas close to urban areas, %_arr</th>
+      <th>Share of persons in rural areas, %_arr</th>
+      <th>Share of persons in rural heartland areas, %_arr</th>
+      <th>Share of persons in sparsely populated rural areas, %_arr</th>
+      <th>Share of persons living in the area of birth, %_arr</th>
+      <th>year</th>
+      <th>net_migration</th>
+      <th>municipality</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>38.6</td>
+      <td>52.2</td>
+      <td>130.7</td>
+      <td>2.466986</td>
+      <td>54.8</td>
+      <td>99.4</td>
+      <td>0.4</td>
+      <td>18.5</td>
+      <td>1.3</td>
+      <td>88.7</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>2.2</td>
+      <td>45.4</td>
+      <td>96.3</td>
+      <td>1.5</td>
+      <td>0.0</td>
+      <td>48.3</td>
+      <td>1990</td>
+      <td>0.005608</td>
+      <td>Akaa</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>38.8</td>
+      <td>52.7</td>
+      <td>152.3</td>
+      <td>2.466986</td>
+      <td>54.9</td>
+      <td>99.4</td>
+      <td>0.5</td>
+      <td>18.5</td>
+      <td>1.7</td>
+      <td>88.5</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>2.3</td>
+      <td>45.7</td>
+      <td>96.3</td>
+      <td>1.5</td>
+      <td>0.0</td>
+      <td>48.4</td>
+      <td>1991</td>
+      <td>0.002920</td>
+      <td>Akaa</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>38.8</td>
+      <td>53.4</td>
+      <td>171.6</td>
+      <td>2.466986</td>
+      <td>55.3</td>
+      <td>99.4</td>
+      <td>0.5</td>
+      <td>18.8</td>
+      <td>1.7</td>
+      <td>88.1</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>2.4</td>
+      <td>45.3</td>
+      <td>96.2</td>
+      <td>1.4</td>
+      <td>0.0</td>
+      <td>48.8</td>
+      <td>1992</td>
+      <td>0.005123</td>
+      <td>Akaa</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>39.1</td>
+      <td>53.8</td>
+      <td>192.3</td>
+      <td>2.466853</td>
+      <td>55.1</td>
+      <td>99.3</td>
+      <td>0.6</td>
+      <td>18.6</td>
+      <td>1.8</td>
+      <td>87.5</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>2.5</td>
+      <td>45.4</td>
+      <td>96.3</td>
+      <td>1.5</td>
+      <td>0.0</td>
+      <td>48.9</td>
+      <td>1993</td>
+      <td>-0.003593</td>
+      <td>Akaa</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>39.3</td>
+      <td>55.2</td>
+      <td>183.2</td>
+      <td>2.466853</td>
+      <td>54.7</td>
+      <td>99.3</td>
+      <td>0.6</td>
+      <td>18.9</td>
+      <td>1.8</td>
+      <td>87.1</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>2.6</td>
+      <td>45.0</td>
+      <td>96.3</td>
+      <td>1.5</td>
+      <td>0.0</td>
+      <td>48.9</td>
+      <td>1994</td>
+      <td>-0.009602</td>
+      <td>Akaa</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 23 columns</p>
+</div></div></div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_agg_w_stats</span><span class="o">.</span><span class="n">dtypes</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Average age, both sexes_arr                                             float64
+Demographic dependency ratio_arr                                        float64
+Economic dependency ratio_arr                                           float64
+Land area, km²_arr                                                      float64
+Population density_arr                                                  float64
+Share of Finnish speakers, %_arr                                        float64
+Share of foreign citizens, %_arr                                        float64
+Share of persons aged under 15, %_arr                                   float64
+Share of persons belonging to other religious groups, %_arr             float64
+Share of persons belonging to the Evangelical Lutheran Church, %_arr    float64
+Share of persons born in the area of residence, %_arr                   float64
+Share of persons in inner urban area, %_arr                             float64
+Share of persons in local centres in rural areas, %_arr                 float64
+Share of persons in outer urban area, %_arr                             float64
+Share of persons in peri-urban area, %_arr                              float64
+Share of persons in rural areas close to urban areas, %_arr             float64
+Share of persons in rural areas, %_arr                                  float64
+Share of persons in rural heartland areas, %_arr                        float64
+Share of persons in sparsely populated rural areas, %_arr               float64
+Share of persons living in the area of birth, %_arr                     float64
+year                                                                      int64
+net_migration                                                           float64
+municipality                                                             object
+dtype: object
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># df_agg_w_stats.to_csv(&quot;data/tft_input.csv&quot;)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="tk-migri-community.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Analyze for migration communities by years</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="tk-darts-tft-global.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Time series modeling</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supplement-with-sotkanet-and-with-dwelling-price-data">Supplement with Sotkanet and with dwelling price data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-net-migration">Prepare net migration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-net-migration-time-series">Plot net migration time series</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#covariates">Covariates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#drop-count-variables">Drop count variables</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By KV
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,2461 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Municipality data from Statistics Finland (Tilastokeskus, TK) &#8212; Finnish Municipality Migration Analysis</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/tk-data-fetch';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Sotkanet indicators" href="sotkanet-municipality.html" />
+    <link rel="prev" title="Data Science Mini-Project" href="../intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Finnish Municipality Migration Analysis</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Data Science Mini-Project
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Data collection and preprocessing</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Municipality data from Statistics Finland (Tilastokeskus, TK)</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="sotkanet-municipality.html">Sotkanet indicators</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Exploratory data analysis (EDA) and visualizations</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tk-data-basic-eda.html">Analysis of basic municipality statistics and migration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Community detection</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tk-migri-community.html">Analyze for migration communities by years</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Modeling</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="ts-data-preparation.html">Data preparation for time series models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tk-darts-tft-global.html">Time series modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tk-lightgbm-common_data.html">LightGBM model on migration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Environment</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../environment.html">The main environment used for the modeling</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/tk-data-fetch.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Municipality data from Statistics Finland (Tilastokeskus, TK)</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Municipality data from Statistics Finland (Tilastokeskus, TK)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#municipality-key-indicators">Municipality key indicators</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#municipality-migration-data">Municipality migration data</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#municipality-dwelling-price-data">Municipality dwelling price data</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="municipality-data-from-statistics-finland-tilastokeskus-tk">
+<h1>Municipality data from Statistics Finland (Tilastokeskus, TK)<a class="headerlink" href="#municipality-data-from-statistics-finland-tilastokeskus-tk" title="Link to this heading">#</a></h1>
+<p>The aim of this notebook is to fetch the municipality data from Statistics Finland.</p>
+<p>Technical instructions: <a class="reference external" href="https://stat.fi/media/uploads/org/avoindata/pxweb_api-ohje.pdf">https://stat.fi/media/uploads/org/avoindata/pxweb_api-ohje.pdf</a></p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">StringIO</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json_query</span><span class="p">):</span>
+    <span class="c1"># Send POST request with JSON data</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">json_query</span><span class="p">)</span>
+    
+    <span class="c1"># Check response status</span>
+    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">),</span> <span class="n">na_values</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<section id="municipality-key-indicators">
+<h2>Municipality key indicators<a class="headerlink" href="#municipality-key-indicators" title="Link to this heading">#</a></h2>
+<p>The url and the base json query are obtained from TK following their instructions.</p>
+<p>From the base json query, we take the list of municipalities for fetching key municipality statistics for the years 1990-2024.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define URL and JSON query</span>
+<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://pxdata.stat.fi:443/PxWeb/api/v1/en/StatFin/vaerak/statfin_vaerak_pxt_11ra.px&quot;</span>
+
+<span class="n">json_query</span><span class="o">=</span> <span class="p">{</span>
+  <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;Alue&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;selection&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;filter&quot;</span><span class="p">:</span> <span class="s2">&quot;item&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="p">[</span>
+          <span class="s2">&quot;SSS&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU020&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU005&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU009&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU010&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU016&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU018&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU019&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU035&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU043&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU046&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU047&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU049&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU050&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU051&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU052&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU060&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU061&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU062&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU065&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU069&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU071&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU072&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU074&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU075&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU076&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU077&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU078&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU079&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU081&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU082&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU086&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU111&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU090&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU091&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU097&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU098&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU102&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU103&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU105&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU106&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU108&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU109&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU139&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU140&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU142&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU143&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU145&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU146&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU153&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU148&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU149&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU151&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU152&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU165&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU167&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU169&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU170&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU171&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU172&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU176&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU177&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU178&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU179&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU181&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU182&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU186&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU202&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU204&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU205&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU208&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU211&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU213&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU214&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU216&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU217&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU218&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU224&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU226&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU230&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU231&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU232&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU233&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU235&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU236&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU239&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU240&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU320&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU241&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU322&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU244&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU245&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU249&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU250&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU256&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU257&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU260&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU261&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU263&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU265&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU271&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU272&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU273&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU275&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU276&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU280&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU284&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU285&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU286&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU287&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU288&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU290&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU291&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU295&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU297&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU300&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU301&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU304&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU305&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU312&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU316&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU317&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU318&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU398&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU399&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU400&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU407&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU402&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU403&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU405&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU408&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU410&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU416&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU417&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU418&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU420&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU421&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU422&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU423&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU425&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU426&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU444&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU430&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU433&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU434&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU435&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU436&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU438&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU440&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU441&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU475&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU478&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU480&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU481&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU483&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU484&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU489&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU491&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU494&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU495&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU498&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU499&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU500&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU503&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU504&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU505&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU508&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU507&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU529&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU531&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU535&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU536&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU538&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU541&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU543&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU545&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU560&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU561&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU562&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU563&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU564&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU309&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU576&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU577&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU578&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU445&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU580&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU581&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU599&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU583&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU854&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU584&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU592&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU593&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU595&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU598&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU601&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU604&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU607&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU608&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU609&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU611&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU638&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU614&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU615&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU616&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU619&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU620&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU623&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU624&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU625&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU626&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU630&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU631&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU635&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU636&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU678&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU710&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU680&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU681&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU683&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU684&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU686&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU687&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU689&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU691&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU694&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU697&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU698&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU700&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU702&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU704&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU707&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU729&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU732&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU734&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU736&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU790&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU738&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU739&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU740&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU742&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU743&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU746&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU747&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU748&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU791&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU749&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU751&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU753&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU755&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU758&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU759&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU761&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU762&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU765&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU766&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU768&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU771&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU777&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU778&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU781&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU783&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU831&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU832&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU833&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU834&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU837&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU844&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU845&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU846&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU848&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU849&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU850&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU851&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU853&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU857&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU858&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU859&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU886&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU887&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU889&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU890&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU892&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU893&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU895&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU785&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU905&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU908&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU092&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU915&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU918&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU921&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU922&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU924&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU925&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU927&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU931&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU934&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU935&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU936&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU941&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU946&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU976&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU977&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU980&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU981&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU989&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KU992&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;MA1&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SA1&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SA2&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SA3&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SA4&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;MK01&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;MK02&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;MK04&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;MK05&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;MK06&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;MK07&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;MK08&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;MK09&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;MK10&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;MK11&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;MK12&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;MK13&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;MK14&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;MK15&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;MK16&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;MK17&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;MK18&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;MK19&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;MA2&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SA5&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;MK21&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;YTA1&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;YTA2&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;YTA3&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;YTA4&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;YTA5&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;YTA6&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HVA01&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HVA02&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HVA03&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HVA04&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HVA05&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HVA06&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HVA07&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HVA08&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HVA09&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HVA10&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HVA11&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HVA12&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HVA13&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HVA14&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HVA15&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HVA16&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HVA17&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HVA18&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HVA19&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HVA20&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HVA21&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HVA90&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HVA91&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK011&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK014&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK015&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK016&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK021&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK022&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK023&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK024&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK025&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK041&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK043&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK044&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK051&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK052&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK053&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK061&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK063&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK064&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK068&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK069&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK071&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK081&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK082&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK091&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK093&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK101&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK103&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK105&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK111&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK112&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK113&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK114&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK115&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK122&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK124&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK125&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK131&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK132&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK133&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK134&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK135&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK138&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK141&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK142&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK144&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK146&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK152&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK153&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK154&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK161&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK162&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK171&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK173&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK174&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK175&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK176&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK177&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK178&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK181&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK182&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK191&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK192&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK193&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK194&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK196&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK197&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK211&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK212&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;SK213&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;ELY01&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;ELY02&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;ELY03&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;ELY04&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;ELY05&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;ELY06&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;ELY07&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;ELY08&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;ELY09&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;ELY10&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;ELY11&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;ELY12&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;ELY13&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;ELY14&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;ELY15&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;ELY16&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;AVI1&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;AVI2&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;AVI3&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;AVI4&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;AVI5&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;AVI6&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;AVI7&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA01&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA02&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA03&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA04&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA05&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA06&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA07&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA08&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA09&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA10&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA11&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA12&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA13&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA14&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA15&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA16&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA17&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA18&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA19&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA20&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA21&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA22&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA23&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA24&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA25&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA26&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA27&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA28&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA29&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA30&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA31&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA32&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA33&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA34&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA35&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA36&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA37&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA38&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA39&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA40&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA41&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA42&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA43&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA44&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA45&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TA46&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TK1&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TK2&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;TK3&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;VP01&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;VP02&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;VP03&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;VP04&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;VP06&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;VP07&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;VP08&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;VP09&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;VP10&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;VP11&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;VP12&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;VP13&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;VP05&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;PL5500&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;PL5530&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;PL5560&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;PL5590&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;PL5620&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;PL5650&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;PL5680&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;PL5710&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;PL5740&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;PL5770&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;PL5800&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;PL5830&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HO1&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HO2&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HO3&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HO4&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;HO6&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KO706&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KO708&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KO713&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KO715&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KO717&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KO725&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KO726&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KO729&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KO730&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KO731&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KO736&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KO742&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KO747&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KO748&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KO750&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KO757&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KO758&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KO761&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KO764&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;KO769&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI1&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI19&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI198&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI199&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI19A&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI196&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI19B&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI1B&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI1B1&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI1C&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI1C1&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI1C2&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI1C6&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI1C7&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI1C5&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI1D&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI1DA&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI1DB&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI1DC&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI1D5&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI1D7&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI1D8&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI1D9&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI2&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI20&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;FI200&quot;</span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;Vuosi&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;selection&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;filter&quot;</span><span class="p">:</span> <span class="s2">&quot;item&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="p">[</span>
+          <span class="s2">&quot;2023&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2024&quot;</span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="s2">&quot;response&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;csv&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">list_of_municipalities</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;KU020&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU005&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU009&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU010&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU016&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU018&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU019&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU035&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU043&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU046&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU047&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU049&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU050&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU051&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU052&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU060&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU061&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU062&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU065&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU069&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU071&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU072&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU074&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU075&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU076&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU077&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU078&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU079&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU081&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU082&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU086&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU111&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU090&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU091&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU097&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU098&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU102&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU103&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU105&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU106&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU108&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU109&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU139&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU140&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU142&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU143&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU145&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU146&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU153&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU148&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU149&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU151&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU152&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU165&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU167&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU169&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU170&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU171&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU172&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU176&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU177&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU178&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU179&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU181&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU182&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU186&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU202&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU204&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU205&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU208&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU211&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU213&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU214&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU216&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU217&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU218&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU224&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU226&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU230&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU231&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU232&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU233&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU235&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU236&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU239&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU240&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU320&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU241&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU322&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU244&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU245&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU249&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU250&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU256&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU257&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU260&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU261&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU263&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU265&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU271&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU272&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU273&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU275&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU276&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU280&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU284&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU285&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU286&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU287&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU288&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU290&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU291&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU295&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU297&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU300&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU301&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU304&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU305&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU312&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU316&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU317&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU318&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU398&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU399&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU400&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU407&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU402&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU403&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU405&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU408&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU410&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU416&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU417&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU418&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU420&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU421&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU422&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU423&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU425&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU426&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU444&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU430&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU433&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU434&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU435&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU436&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU438&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU440&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU441&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU475&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU478&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU480&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU481&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU483&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU484&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU489&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU491&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU494&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU495&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU498&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU499&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU500&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU503&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU504&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU505&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU508&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU507&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU529&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU531&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU535&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU536&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU538&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU541&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU543&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU545&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU560&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU561&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU562&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU563&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU564&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU309&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU576&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU577&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU578&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU445&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU580&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU581&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU599&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU583&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU854&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU584&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU592&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU593&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU595&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU598&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU601&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU604&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU607&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU608&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU609&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU611&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU638&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU614&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU615&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU616&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU619&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU620&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU623&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU624&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU625&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU626&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU630&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU631&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU635&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU636&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU678&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU710&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU680&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU681&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU683&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU684&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU686&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU687&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU689&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU691&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU694&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU697&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU698&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU700&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU702&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU704&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU707&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU729&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU732&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU734&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU736&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU790&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU738&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU739&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU740&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU742&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU743&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU746&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU747&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU748&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU791&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU749&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU751&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU753&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU755&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU758&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU759&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU761&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU762&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU765&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU766&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU768&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU771&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU777&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU778&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU781&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU783&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU831&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU832&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU833&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU834&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU837&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU844&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU845&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU846&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU848&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU849&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU850&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU851&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU853&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU857&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU858&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU859&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU886&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU887&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU889&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU890&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU892&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU893&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU895&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU785&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU905&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU908&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU092&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU915&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU918&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU921&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU922&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU924&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU925&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU927&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU931&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU934&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU935&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU936&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU941&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU946&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU976&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU977&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU980&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU981&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU989&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KU992&quot;</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">json_query_mun_1</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;Alue&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;selection&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;filter&quot;</span><span class="p">:</span> <span class="s2">&quot;item&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="p">[</span>
+          <span class="s2">&quot;&quot;</span> <span class="c1"># modified dynamically </span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="s2">&quot;response&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;csv&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">split_into_batches</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">lst</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">),</span> <span class="n">batch_size</span><span class="p">)]</span>
+
+<span class="n">mun_stats</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">muns</span> <span class="ow">in</span> <span class="n">split_into_batches</span><span class="p">(</span><span class="n">list_of_municipalities</span><span class="p">):</span>
+    <span class="n">json_query_mun_1</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;selection&quot;</span><span class="p">][</span><span class="s2">&quot;values&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">muns</span>
+    <span class="n">mun_stats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json_query_mun_1</span><span class="p">))</span>
+
+<span class="n">mun_stats</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">mun_stats</span><span class="p">)</span>
+<span class="n">mun_stats</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Area</th>
+      <th>Information</th>
+      <th>1990</th>
+      <th>1991</th>
+      <th>1992</th>
+      <th>1993</th>
+      <th>1994</th>
+      <th>1995</th>
+      <th>1996</th>
+      <th>1997</th>
+      <th>...</th>
+      <th>2015</th>
+      <th>2016</th>
+      <th>2017</th>
+      <th>2018</th>
+      <th>2019</th>
+      <th>2020</th>
+      <th>2021</th>
+      <th>2022</th>
+      <th>2023</th>
+      <th>2024</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Akaa</td>
+      <td>Population 31 Dec</td>
+      <td>16048.0</td>
+      <td>16096.0</td>
+      <td>16201.0</td>
+      <td>16142.0</td>
+      <td>16038.0</td>
+      <td>15986.0</td>
+      <td>15924.0</td>
+      <td>15840.0</td>
+      <td>...</td>
+      <td>17043.0</td>
+      <td>16923.0</td>
+      <td>16769.0</td>
+      <td>16611.0</td>
+      <td>16475.0</td>
+      <td>16391.0</td>
+      <td>16467.0</td>
+      <td>16473.0</td>
+      <td>16405.0</td>
+      <td>16387.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Akaa</td>
+      <td>Increase of population</td>
+      <td>111.0</td>
+      <td>48.0</td>
+      <td>105.0</td>
+      <td>-59.0</td>
+      <td>-104.0</td>
+      <td>-52.0</td>
+      <td>-62.0</td>
+      <td>-84.0</td>
+      <td>...</td>
+      <td>-9.0</td>
+      <td>-120.0</td>
+      <td>-154.0</td>
+      <td>-158.0</td>
+      <td>-136.0</td>
+      <td>-84.0</td>
+      <td>76.0</td>
+      <td>6.0</td>
+      <td>-68.0</td>
+      <td>-18.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Akaa</td>
+      <td>Increase of population, %</td>
+      <td>0.7</td>
+      <td>0.3</td>
+      <td>0.7</td>
+      <td>-0.4</td>
+      <td>-0.6</td>
+      <td>-0.3</td>
+      <td>-0.4</td>
+      <td>-0.5</td>
+      <td>...</td>
+      <td>-0.1</td>
+      <td>-0.7</td>
+      <td>-0.9</td>
+      <td>-0.9</td>
+      <td>-0.8</td>
+      <td>-0.5</td>
+      <td>0.5</td>
+      <td>0.0</td>
+      <td>-0.4</td>
+      <td>-0.1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Akaa</td>
+      <td>Share of persons aged under 15, %</td>
+      <td>18.5</td>
+      <td>18.5</td>
+      <td>18.8</td>
+      <td>18.6</td>
+      <td>18.9</td>
+      <td>18.7</td>
+      <td>18.6</td>
+      <td>18.3</td>
+      <td>...</td>
+      <td>18.5</td>
+      <td>18.3</td>
+      <td>18.0</td>
+      <td>17.7</td>
+      <td>17.2</td>
+      <td>16.5</td>
+      <td>16.3</td>
+      <td>15.7</td>
+      <td>15.3</td>
+      <td>15.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Akaa</td>
+      <td>Share of persons aged 15 to 64, %</td>
+      <td>65.7</td>
+      <td>65.5</td>
+      <td>65.2</td>
+      <td>65.0</td>
+      <td>64.4</td>
+      <td>64.3</td>
+      <td>64.2</td>
+      <td>64.4</td>
+      <td>...</td>
+      <td>60.5</td>
+      <td>60.2</td>
+      <td>59.8</td>
+      <td>59.4</td>
+      <td>59.3</td>
+      <td>59.3</td>
+      <td>58.9</td>
+      <td>58.9</td>
+      <td>59.1</td>
+      <td>59.2</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>339</th>
+      <td>Äänekoski</td>
+      <td>Share of persons in rural areas, %</td>
+      <td>98.7</td>
+      <td>98.7</td>
+      <td>98.8</td>
+      <td>98.8</td>
+      <td>98.9</td>
+      <td>98.9</td>
+      <td>98.9</td>
+      <td>98.8</td>
+      <td>...</td>
+      <td>99.4</td>
+      <td>99.2</td>
+      <td>99.2</td>
+      <td>99.2</td>
+      <td>99.2</td>
+      <td>99.6</td>
+      <td>99.6</td>
+      <td>99.1</td>
+      <td>99.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>340</th>
+      <td>Äänekoski</td>
+      <td>Share of persons in local centres in rural are...</td>
+      <td>40.4</td>
+      <td>40.6</td>
+      <td>41.0</td>
+      <td>41.1</td>
+      <td>41.5</td>
+      <td>41.8</td>
+      <td>42.0</td>
+      <td>42.4</td>
+      <td>...</td>
+      <td>44.2</td>
+      <td>44.2</td>
+      <td>44.1</td>
+      <td>44.7</td>
+      <td>45.1</td>
+      <td>45.0</td>
+      <td>44.9</td>
+      <td>44.7</td>
+      <td>45.1</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>341</th>
+      <td>Äänekoski</td>
+      <td>Share of persons in rural areas close to urban...</td>
+      <td>0.2</td>
+      <td>0.2</td>
+      <td>0.1</td>
+      <td>0.1</td>
+      <td>0.1</td>
+      <td>0.1</td>
+      <td>0.1</td>
+      <td>0.1</td>
+      <td>...</td>
+      <td>0.4</td>
+      <td>0.3</td>
+      <td>0.3</td>
+      <td>0.4</td>
+      <td>0.4</td>
+      <td>0.4</td>
+      <td>0.4</td>
+      <td>0.4</td>
+      <td>0.4</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>342</th>
+      <td>Äänekoski</td>
+      <td>Share of persons in rural heartland areas, %</td>
+      <td>46.8</td>
+      <td>46.5</td>
+      <td>46.4</td>
+      <td>46.2</td>
+      <td>46.0</td>
+      <td>45.9</td>
+      <td>45.6</td>
+      <td>45.4</td>
+      <td>...</td>
+      <td>44.1</td>
+      <td>44.2</td>
+      <td>44.1</td>
+      <td>43.7</td>
+      <td>43.4</td>
+      <td>43.9</td>
+      <td>44.1</td>
+      <td>43.7</td>
+      <td>43.5</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>343</th>
+      <td>Äänekoski</td>
+      <td>Share of persons in sparsely populated rural a...</td>
+      <td>11.4</td>
+      <td>11.4</td>
+      <td>11.3</td>
+      <td>11.3</td>
+      <td>11.3</td>
+      <td>11.1</td>
+      <td>11.1</td>
+      <td>10.9</td>
+      <td>...</td>
+      <td>10.7</td>
+      <td>10.5</td>
+      <td>10.5</td>
+      <td>10.5</td>
+      <td>10.3</td>
+      <td>10.3</td>
+      <td>10.3</td>
+      <td>10.2</td>
+      <td>10.1</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>13244 rows × 37 columns</p>
+</div></div></div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mun_stats</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;data/statfin_vaerak_pxt_11ra_municipalities.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+</section>
+<section id="municipality-migration-data">
+<h2>Municipality migration data<a class="headerlink" href="#municipality-migration-data" title="Link to this heading">#</a></h2>
+<p>Then we fetch the intermunicipal migration data.</p>
+<p>11a1 – Kuntien välinen muutto tulo- ja lähtöalueittain, 1990-2023</p>
+<p>11a1 – Intermunicipal migration by area of arrival and departure, 1990-2023</p>
+<p><a class="reference external" href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__muutl/statfin_muutl_pxt_11a1.px/">https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__muutl/statfin_muutl_pxt_11a1.px/</a></p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://pxdata.stat.fi:443/PxWeb/api/v1/en/StatFin/muutl/statfin_muutl_pxt_11a1.px&quot;</span>
+<span class="n">json_query</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;Tuloalue&quot;</span><span class="p">,</span>  <span class="c1"># place of arrival</span>
+      <span class="s2">&quot;selection&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;filter&quot;</span><span class="p">:</span> <span class="s2">&quot;item&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="p">[</span>
+          <span class="s2">&quot;&quot;</span>  <span class="c1"># modified dynamically </span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;Lähtöalue&quot;</span><span class="p">,</span>  <span class="c1"># place of departure</span>
+      <span class="s2">&quot;selection&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;filter&quot;</span><span class="p">:</span> <span class="s2">&quot;item&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="p">[</span>
+          <span class="s2">&quot;&quot;</span>  <span class="c1"># all municipalities</span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;Sukupuoli&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;selection&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;filter&quot;</span><span class="p">:</span> <span class="s2">&quot;item&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="p">[</span>
+          <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2&quot;</span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="s2">&quot;response&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;csv&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">json_query</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;selection&quot;</span><span class="p">][</span><span class="s2">&quot;values&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">list_of_municipalities</span>
+
+<span class="n">mun_migration</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">muns</span> <span class="ow">in</span> <span class="n">split_into_batches</span><span class="p">(</span><span class="n">list_of_municipalities</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">json_query</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;selection&quot;</span><span class="p">][</span><span class="s2">&quot;values&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">muns</span>
+    <span class="n">mun_migration</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json_query</span><span class="p">))</span>
+
+<span class="n">mun_migration</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">mun_migration</span><span class="p">)</span>
+<span class="n">mun_migration</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Area of arrival</th>
+      <th>Area of departure</th>
+      <th>Males 1990 Intermunicipal migration</th>
+      <th>Males 1991 Intermunicipal migration</th>
+      <th>Males 1992 Intermunicipal migration</th>
+      <th>Males 1993 Intermunicipal migration</th>
+      <th>Males 1994 Intermunicipal migration</th>
+      <th>Males 1995 Intermunicipal migration</th>
+      <th>Males 1996 Intermunicipal migration</th>
+      <th>Males 1997 Intermunicipal migration</th>
+      <th>...</th>
+      <th>Females 2014 Intermunicipal migration</th>
+      <th>Females 2015 Intermunicipal migration</th>
+      <th>Females 2016 Intermunicipal migration</th>
+      <th>Females 2017 Intermunicipal migration</th>
+      <th>Females 2018 Intermunicipal migration</th>
+      <th>Females 2019 Intermunicipal migration</th>
+      <th>Females 2020 Intermunicipal migration</th>
+      <th>Females 2021 Intermunicipal migration</th>
+      <th>Females 2022 Intermunicipal migration</th>
+      <th>Females 2023 Intermunicipal migration</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Arrival - Akaa</td>
+      <td>Departure - Akaa</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Arrival - Akaa</td>
+      <td>Departure - Alajärvi</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Arrival - Akaa</td>
+      <td>Departure - Alavieska</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Arrival - Akaa</td>
+      <td>Departure - Alavus</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Arrival - Akaa</td>
+      <td>Departure - Asikkala</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>919</th>
+      <td>Arrival - Äänekoski</td>
+      <td>Departure - Ylivieska</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>920</th>
+      <td>Arrival - Äänekoski</td>
+      <td>Departure - Ylöjärvi</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2</td>
+      <td>2</td>
+      <td>...</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>2</td>
+      <td>0</td>
+      <td>3</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>921</th>
+      <td>Arrival - Äänekoski</td>
+      <td>Departure - Ypäjä</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>922</th>
+      <td>Arrival - Äänekoski</td>
+      <td>Departure - Ähtäri</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>4</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>0</td>
+      <td>...</td>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>923</th>
+      <td>Arrival - Äänekoski</td>
+      <td>Departure - Äänekoski</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>94864 rows × 70 columns</p>
+</div></div></div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mun_migration</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;data/statfin_muutl_pxt_11a1_municipalities.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="municipality-dwelling-price-data">
+<h1>Municipality dwelling price data<a class="headerlink" href="#municipality-dwelling-price-data" title="Link to this heading">#</a></h1>
+<p>Finally, get the dwelling price data. Year 2000 is assigned index value 100.0.</p>
+<p>13mz – Price indices of old dwellings in housing companies (1970=100, 1983=100, 2000=100, 2005=100, 2010=100, 2015=100), yearly, 1988-2024*</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://pxdata.stat.fi:443/PxWeb/api/v1/en/StatFin/ashi/statfin_ashi_pxt_13mz.px&quot;</span>
+
+<span class="n">json_query</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;Vuosi&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;selection&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;filter&quot;</span><span class="p">:</span> <span class="s2">&quot;item&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="p">[</span>
+          <span class="s2">&quot;1990&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;1991&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;1992&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;1993&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;1994&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;1995&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;1996&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;1997&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;1998&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;1999&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2000&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2001&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2002&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2003&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2004&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2005&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2006&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2007&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2008&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2009&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2010&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2011&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2012&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2013&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2014&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2015&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2016&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2017&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2018&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2019&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2020&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2021&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2022&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;2023&quot;</span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;Tiedot&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;selection&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;filter&quot;</span><span class="p">:</span> <span class="s2">&quot;item&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="p">[</span>
+          <span class="s2">&quot;ind00&quot;</span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="s2">&quot;response&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;csv&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">price_info</span> <span class="o">=</span> <span class="n">get_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json_query</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">price_info</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;data/statfin_ashi_pxt_13mz.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">price_info</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Region</th>
+      <th>Index (2000=100)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1990</td>
+      <td>Whole country</td>
+      <td>94.7</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1990</td>
+      <td>Greater Helsinki</td>
+      <td>90.8</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1990</td>
+      <td>Whole country excluding Greater Helsinki</td>
+      <td>98.2</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1990</td>
+      <td>Major cities (total)</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1990</td>
+      <td>Whole country excluding major cities</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2953</th>
+      <td>2023</td>
+      <td>Oulu 2</td>
+      <td>133.3</td>
+    </tr>
+    <tr>
+      <th>2954</th>
+      <td>2023</td>
+      <td>Kainuu</td>
+      <td>108.2</td>
+    </tr>
+    <tr>
+      <th>2955</th>
+      <td>2023</td>
+      <td>Kajaani</td>
+      <td>120.2</td>
+    </tr>
+    <tr>
+      <th>2956</th>
+      <td>2023</td>
+      <td>Lapland</td>
+      <td>131.7</td>
+    </tr>
+    <tr>
+      <th>2957</th>
+      <td>2023</td>
+      <td>Rovaniemi</td>
+      <td>147.4</td>
+    </tr>
+  </tbody>
+</table>
+<p>2958 rows × 3 columns</p>
+</div></div></div>
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Data Science Mini-Project</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="sotkanet-municipality.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Sotkanet indicators</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Municipality data from Statistics Finland (Tilastokeskus, TK)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#municipality-key-indicators">Municipality key indicators</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#municipality-migration-data">Municipality migration data</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#municipality-dwelling-price-data">Municipality dwelling price data</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By KV
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
