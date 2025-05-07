@@ -15,6 +15,7 @@ parts:
     - file: notebooks/tk-migri-community
   - caption: Modeling
     chapters:
+    - file: notebooks/tk-data-prep-util
     - file: notebooks/ts-data-preparation
     - file: notebooks/tk-darts-tft-global
     - file: notebooks/tk-lightgbm-common_data
