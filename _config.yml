@@ -1,0 +1,15 @@
+title: "Finnish Municipality Migration Analysis"
+author: "KV"
+execute:
+  execute_notebooks: off  # Options: "auto" (default), "force", "cache", "off"
+copyright: ""
+sphinx:
+  config:
+    html_extra_path: ["my_htmls"]
+  extra_extensions:
+    - sphinx_subfigure
+#sphinx:
+#  extra_css:
+#    - custom.css
+#  extra_js:
+#    - custom.js

@@ -1,0 +1,23 @@
+format: jb-book
+root: intro  # intro.md/ipynb
+options:
+  maxdepth: 5
+parts:
+  - caption: Data collection and preprocessing
+    chapters:
+    - file: notebooks/tk-data-fetch
+    - file: notebooks/sotkanet-municipality
+  - caption: Exploratory data analysis (EDA) and visualizations
+    chapters:
+    - file: notebooks/tk-data-basic-eda
+  - caption: Community detection
+    chapters:
+    - file: notebooks/tk-migri-community
+  - caption: Modeling
+    chapters:
+    - file: notebooks/ts-data-preparation
+    - file: notebooks/tk-darts-tft-global
+    - file: notebooks/tk-lightgbm-common_data
+  - caption: Environment
+    chapters:
+    - file: environment
